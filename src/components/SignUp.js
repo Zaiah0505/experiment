@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useForm } from 'react-hook-form';
 import validator from 'validator';
+import firebase from '../firebase';
 
 function Copyright() {
   return (
@@ -47,12 +48,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
-  const { register, handleSubmit, watch, errors, setError } = useForm();
+  const { register, handleSubmit, errors, setError } = useForm();
   const onSubmit = data => {
-    console.log(data);
+    const {email, password} = data;
+    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      setError("email", {
+        type: "conflict",
+        message: errorMessage
+      })
+    });
   }
-  console.log(errors.email)
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />

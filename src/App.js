@@ -8,11 +8,31 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import firebase from "./firebase";
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, logout } from './actions/index';
+import Drawer from '@material-ui/core/Drawer';
+import Menu from './components/Drawer'
 
 function App() {
+  const open = useSelector(store => store.drawer);
+  const dispatch = useDispatch();
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      // User is signed in.
+      dispatch(setUser(user));
+    } else {
+      // No user is signed in.
+      dispatch(logout());
+    }
+  });
+
   return (
     <div className="App">
     <NavBar />
+    <Drawer anchor='left' open={open} variant='permanent'>
+      asodfijads
+    </Drawer>
     <Router>
       <nav>
         <ul>
@@ -27,6 +47,7 @@ function App() {
           </li>
         </ul>
       </nav>
+      <h1>Hello World</h1>
       <Switch>
         <Route path="/login">
           <SignIn />

@@ -11,6 +11,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useForm } from 'react-hook-form';
+import firebase from '../firebase';
 
 function Copyright() {
   return (
@@ -47,6 +49,29 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  const { register, handleSubmit, errors, setError } = useForm();
+  const onSubmit = data => {
+    const {email, password} = data;
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode)
+      if ([
+        'auth/invalid-email', 'auth/user-disabled', 'auth/user-not-found'
+      ].includes(errorCode)) {
+        setError("email", {
+          type: errorCode,
+          message: errorMessage
+        })
+      } else if (errorCode === 'auth/wrong-password') {
+        setError("password", {
+          type: errorCode,
+          message: errorMessage
+        })
+      }
+    });
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -57,7 +82,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit(onSubmit)}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -68,6 +93,9 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            inputRef={register}
+            error={errors.email ? true : false}
+            helperText={errors.email && errors.email.message}
           />
           <TextField
             variant="outlined"
@@ -79,6 +107,9 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            inputRef={register}
+            error={errors.password ? true : false}
+            helperText={errors.password && errors.password.message}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
