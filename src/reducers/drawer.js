@@ -1,4 +1,4 @@
-const drawerReducer = (state = true, action) => {
+const drawerReducer = (state = false, action) => {
   switch(action.type) {
     case 'OPEN_DRAWER':
       {
