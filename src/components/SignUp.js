@@ -50,16 +50,23 @@ export default function SignUp() {
   const classes = useStyles();
   const { register, handleSubmit, errors, setError } = useForm();
   const onSubmit = data => {
+    if (data.password === data.password2) {
     const {email, password} = data;
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      setError("email", {
-        type: "conflict",
-        message: errorMessage
+      firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        setError("email", {
+          type: "conflict",
+          message: errorMessage
+        })
+      });
+    } else {
+      setError("password2", {
+        type: "mismatch",
+        message: "Passwords must match"
       })
-    });
+    }
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -105,6 +112,24 @@ export default function SignUp() {
                 })}
                 error={errors.password ? true : false}
                 helperText={errors.password && errors.password.message}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password2"
+                label="Confirm Password"
+                type="password"
+                id="password2"
+                autoComplete="current-password"
+                inputRef={register({
+                  validate: value => validator.isLength(value, { min: 6 }) ||
+                  'Password must be at least 6 characters'
+                })}
+                error={errors.password2 ? true : false}
+                helperText={errors.password2 && errors.password2.message}
               />
             </Grid>
           </Grid>

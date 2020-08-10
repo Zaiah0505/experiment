@@ -7,39 +7,39 @@ function Parser(props) {
     const items = []
 
     for (const [index, value] of text.entries()) {
-      if (typeof value == 'string') {
+      if (typeof value === 'string') {
         items.push(value);
-      } else if (typeof value == 'object' && ['strong', 'em', 'del'].includes(value.style)) {
+      } else if (typeof value === 'object' && ['strong', 'em', 'del'].includes(value.style)) {
         items.push(
           helper(value.body, value.style)
         )
-      } else if (typeof value == 'object' && value.style.startsWith('link')) {
+      } else if (typeof value === 'object' && value.style.startsWith('link')) {
         const link = value.style.substr(4);
         items.push(
           helper(value.body, value.style)
         )
-      } else if (typeof value == 'object' && value.style == 'br') {
+      } else if (typeof value === 'object' && value.style === 'br') {
         items.push(
           <br />
         )
       }
     }
 
-    if (wrapper == "none") {
+    if (wrapper === "none") {
       return items      
-    } else if (wrapper == "em") {
+    } else if (wrapper === "em") {
       return (
         <em>
           {items}
         </em>
       )
-    } else if (wrapper == "strong") {
+    } else if (wrapper === "strong") {
       return (
         <strong>
           {items}
         </strong>
       )
-    } else if (wrapper == "del") {
+    } else if (wrapper === "del") {
       return (
         <del>
           {items}

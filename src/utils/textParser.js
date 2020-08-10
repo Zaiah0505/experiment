@@ -30,10 +30,12 @@ export default function splitter(text) {
           for (let j = 0; j < extraText.length; j++) {
             if (extraText[j] === ">") {
               const linkText = text.substr(i + 2, j);
-              if (validator.isURL(linkText) && (linkText.startsWith("http://") || linkText.startsWith("https://"))) {
+              if (validator.isURL(linkText)) {
                 styleType = "link"
                 breakpoint = i + j + 2;
                 return true
+              } else {
+                return false
               }
             }
           }
@@ -74,7 +76,12 @@ export default function splitter(text) {
       tempMid += mid[0];
       mid = mid.substr(1);
     }
-    const linkText = mid.substr(2)
+    let linkText = mid.substr(2)
+    if (validator.isEmail(linkText)) {
+      linkText = "mailto:" + linkText 
+    } else if (!(linkText.startsWith("https://") || linkText.startsWith("http://"))) {
+      linkText = "https://" + linkText 
+    }
     styleType = 'link: ' + linkText
     mid = tempMid;
   }

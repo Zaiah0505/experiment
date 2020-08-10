@@ -107,3 +107,4 @@ function splitter(text) {
 }
 
 console.log(splitter('rich \n text'))
+console.log(validator.isURL('nussu@nus.org.sg'))

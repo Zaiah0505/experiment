@@ -8,8 +8,8 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 240,
   },
   summaryPaper: {
-    width: 260,
-    border: "1px solid brown",
+    width: 264,
+    border: "2px solid #DDDDDD",
     margin: "auto",
     "word-wrap": "break-word"
   }
@@ -54,6 +54,7 @@ export default function Summary(props) {
       {event.deadline && event.deadline}
       {event.link && (<strong><br />Link: </strong>)}
       {event.link && (<strong><a href={event.link}>{event.link}</a></strong>)}
+      {event.custom && <RichText text={"\n" + event.custom}/>}
       </p>
     </div>
   )

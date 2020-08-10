@@ -5,7 +5,7 @@ export default function Details(props) {
   const {title, organisation, poster, posterLink, text} = props.event;
 
   return (
-    <table align="center" width="800" style={{backgroundColor:"#F8F8F8"}}>
+    <table align="center" width="800" style={{backgroundColor:"#F8F8F8", border:"2px solid #DDDDDD"}}>
       <tr bgcolor="#F8F8F8">
         <td colspan="4" align="middle" style={{width:"800px", padding: "20px"}}>
           <h3 align="center"
@@ -45,11 +45,6 @@ export default function Details(props) {
         <box type="box" style={{padding: "5px 15px 5px 15px", backgroundColor:"#D8D8D8"}}><a href="#HIGHLIGHTS"
             style={{color: "#000"}}>BACK TO HIGHLIGHTS</a></box>
       </td>
-      <tr>
-        <td colspan="4" style={{backgroundColor:"#F8F8F8"}}>
-          <hr style={{height:"3px", width:"800px", backgroundColor:"#D8D8D8", align:"center"}} />
-        </td>
-      </tr>
     </table>
   )
 }
