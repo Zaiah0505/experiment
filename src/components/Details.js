@@ -1,8 +1,20 @@
 import React from 'react';
 import RichText from './RichText';
+import validator from 'validator';
 
 export default function Details(props) {
   const {title, organisation, poster, posterLink, text} = props.event;
+  const linkValidator = (link) => {
+    if (validator.isURL(link)) {
+      if (validator.isEmail(link)) {
+        return "mailto:" + link;
+      } else if (!(link.startsWith("http://" || link.startsWith("https://")))) {
+        return "https://" + link;
+      }
+    } else {
+      return link;
+    }
+  }
 
   return (
     <table align="center" width="800" style={{backgroundColor:"#F8F8F8", border:"2px solid #DDDDDD"}}>
@@ -22,7 +34,7 @@ export default function Details(props) {
           style={{padding: "5px 0px 5px", fontSize: "1px", lineHeight: "1px", width:"300px"}}>
           <p align="center"
             style={{color:"#000", fontWeight: "normal", margin: 0, padding: 0, lineHeight: "20px", fontSize: "15px", fontFamily: "Trebuchet MS"}}>
-            <a href={posterLink}><img
+            <a href={linkValidator(posterLink)}><img
                 src={poster}
                 width="600" /></a></p>
         </td>

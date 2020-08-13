@@ -9,7 +9,6 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Summary from './Summary';
 import Details from './Details';
-import validator from 'validator';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -46,17 +45,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Request() {
   const classes = useStyles();
-  const linkValidator = (link) => {
-    if (validator.isURL(link)) {
-      if (validator.isEmail(link)) {
-        return "mailto:" + link;
-      } else if (!(link.startsWith("http://" || link.startsWith("https://")))) {
-        return "https://" + link;
-      }
-    } else {
-      return link;
-    }
-  }
   const defaultEvent = {
     title: "Event Title",
     organisation: "Organisation",

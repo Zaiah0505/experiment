@@ -2,13 +2,17 @@ import React from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import { Button } from "@material-ui/core";
 import SideDrawer from "./components/SideDrawer";
 import NavBar from './components/NavBar';
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Link, Redirect } from "react-router-dom";
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import { useSelector } from "react-redux";
 import Request from './components/Request';
+import firebase from './firebase';
+import {useDispatch} from 'react-redux';
+import { setUser } from './actions';
 
 const drawerWidth = 240;
 
@@ -44,14 +48,22 @@ const useStyles = makeStyles(theme => ({
 
 function ResponsiveDrawer() {
   const classes = useStyles();
-  const isLoggedIn = useSelector(state => state.auth.logged);
+  const isLoggedIn = useSelector(store => store.auth.logged);
+
+  const dispatch = useDispatch();
+  firebase.auth().signInWithEmailAndPassword("zaiah0505@hotmail.com", "class6b0505")
+  .then(user => {
+    if (user) {
+      dispatch(setUser(user));
+    }
+  })
 
   return (
     <Router>
       <div className={classes.root}>
         <CssBaseline />
         <NavBar />
-        <SideDrawer />
+        {isLoggedIn && <SideDrawer />}
         <main className={classes.content}>
           <div className={classes.toolbar} />
 
@@ -80,6 +92,7 @@ function ResponsiveDrawer() {
                 <Request />
               </Route>
               <Route path="/">
+                {!isLoggedIn ? <Redirect to="/login" /> :
                 <Typography paragraph>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
@@ -95,20 +108,7 @@ function ResponsiveDrawer() {
                   lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
                   faucibus et molestie ac.
                 </Typography>
-                <Typography paragraph>
-                  Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-                  ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-                  elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-                  sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-                  mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-                  risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-                  purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-                  tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-                  morbi tristique senectus et. Adipiscing elit duis tristique
-                  sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-                  eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-                  posuere sollicitudin aliquam ultrices sagittis orci a.
-              </Typography>
+                }
               </Route>
             </Switch>
           </div>

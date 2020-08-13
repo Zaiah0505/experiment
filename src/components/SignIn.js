@@ -56,6 +56,42 @@ export default function SignIn() {
 
   const onSubmit = data => {
     const {email, password} = data;
+
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(function() {
+      // Existing and future Auth states are now persisted in the current
+      // session only. Closing the window would clear any existing state even
+      // if a user forgets to sign out.
+      // ...
+      // New sign-in will be persisted with session persistence.
+      return firebase.auth().signInWithEmailAndPassword(email, password);
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(errorCode)
+      if ([
+        'auth/invalid-email', 'auth/user-disabled', 'auth/user-not-found'
+      ].includes(errorCode)) {
+        setError("email", {
+          type: errorCode,
+          message: errorMessage
+        })
+      } else if (errorCode === 'auth/wrong-password') {
+        setError("password", {
+          type: errorCode,
+          message: errorMessage
+        })
+      }
+    })
+    .then(user => {
+      if (user) {
+        dispatch(setUser(user));
+      }
+    })
+
+    /*
     firebase.auth().signInWithEmailAndPassword(email, password)
     .catch(function(error) {
       // Handle Errors here.
@@ -81,6 +117,7 @@ export default function SignIn() {
         dispatch(setUser(user));
       }
     })
+    */
   }
 
   return (

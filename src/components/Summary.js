@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import RichText from './RichText';
+import validator from 'validator';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -18,6 +19,17 @@ const useStyles = makeStyles((theme) => ({
 export default function Summary(props) {
   const classes = useStyles();
   const { event } = props;
+  const linkValidator = (link) => {
+    if (validator.isURL(link)) {
+      if (validator.isEmail(link)) {
+        return "mailto:" + link;
+      } else if (!(link.startsWith("http://" || link.startsWith("https://")))) {
+        return "https://" + link;
+      }
+    } else {
+      return link;
+    }
+  }
 
   return (
     <div className={classes.summaryPaper} >
@@ -53,7 +65,7 @@ export default function Summary(props) {
       {event.deadline && (<strong><br />Deadline: </strong>)}
       {event.deadline && event.deadline}
       {event.link && (<strong><br />Link: </strong>)}
-      {event.link && (<strong><a href={event.link}>{event.link}</a></strong>)}
+      {event.link && (<strong><a href={linkValidator(event.link)}>{event.link}</a></strong>)}
       {event.custom && <RichText text={"\n" + event.custom}/>}
       </p>
     </div>
